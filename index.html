@@ -1,0 +1,1476 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Univers</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Syne:wght@800&display=swap" rel="stylesheet">
+    
+    <style>
+        html {
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            overflow-x: hidden;
+            color: #4B4038;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* --- ANTI-SUPERPOSITION GLOBAL & MARGES --- */
+        * {
+            box-sizing: border-box;
+        }
+
+        body > *, .section > * {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .section {
+            height: 100vh;
+            height: 100dvh;
+            width: 100vw;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            gap: 12px;
+        }
+
+        .section-title {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: clamp(1.5em, 4vw, 2.5em);
+            text-transform: uppercase;
+            letter-spacing: -0.04em;
+            z-index: 10;
+            flex-shrink: 0;
+            margin-bottom: 0;
+            color: #50352F;
+            text-align: center;
+            width: 100%;
+        }
+
+        /* --- CONFIGURATION DES PAGES --- */
+        #page-intro { background-color: #FFF5F6; color: #4A2638; }
+        #page-exploits { background-color: #F4F8F3; color: #263D35; } 
+        #page-cloud { background-color: #FBF4E8; color: #4B4038; align-items: flex-start; padding-left: 40px; padding-right: 40px; }
+        #page-cloud .section-title { text-align: center; }
+        #page-secret { background-color: #F7F2F9; color: #38263F; }
+
+        /* --- COMMUN BENTO (PAGES 1, 2 & 4) --- */
+        .bento-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+            max-width: 580px;
+            margin: 0 auto;
+            z-index: 10;
+            flex-grow: 0;
+            padding: 5px;
+        }
+
+        .bento-row {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            align-items: stretch;
+        }
+
+        .bento-card {
+            padding: 16px 14px;
+            border-radius: 22px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .bento-card:hover {
+            transform: scale(1.02);
+            z-index: 20;
+        }
+
+        /* --- PAGE 1 : BENTO ASYMÉTRIQUE --- */
+        .card-rose-light  { background-color: #F8C8D4; color: #4A2638; box-shadow: 0 8px 20px rgba(74, 38, 56, 0.08); } 
+        .card-rose-medium { background-color: #D98FA3; color: #FFF5F6; box-shadow: 0 8px 20px rgba(74, 38, 56, 0.08); } 
+        .card-rose-dark   { background-color: #A95770; color: #FFF8F5; box-shadow: 0 8px 20px rgba(74, 38, 56, 0.08); } 
+        .card-rose-deep   { background-color: #C98F9F; color: #3D2230; box-shadow: 0 8px 20px rgba(74, 38, 56, 0.08); } 
+
+        #page-intro .bento-row:nth-child(1) .bento-card:nth-child(1) { flex: 0.8; padding-top: 18px; padding-bottom: 18px; }
+        #page-intro .bento-row:nth-child(1) .bento-card:nth-child(2) { flex: 1.6; padding-top: 12px; padding-bottom: 12px; }
+        #page-intro .bento-row:nth-child(2) .bento-card:nth-child(1) { flex: 1.3; padding-top: 15px; padding-bottom: 15px; }
+        #page-intro .bento-row:nth-child(2) .bento-card:nth-child(2) { flex: 0.9; padding-top: 15px; padding-bottom: 15px; }
+        #page-intro .bento-row:nth-child(3) .bento-card:nth-child(1) { flex: 1; padding-top: 14px; padding-bottom: 14px; }
+        #page-intro .bento-row:nth-child(3) .bento-card:nth-child(2) { flex: 1.2; padding-top: 14px; padding-bottom: 14px; }
+        #page-intro .bento-row:nth-child(4) .bento-card:nth-child(1) { flex: 1.5; padding-top: 16px; padding-bottom: 16px; }
+        #page-intro .bento-row:nth-child(4) .bento-card:nth-child(2) { flex: 0.8; padding-top: 16px; padding-bottom: 16px; }
+
+        /* --- PAGE 4 : BENTO ASYMÉTRIQUE ADAPTÉ (Palette Prune / Lavande) --- */
+        #page-secret .section-title { color: #38263F; }
+        .card-purple-1 { background-color: #E6D8EB; color: #49344F; box-shadow: 0 8px 20px rgba(56, 38, 63, 0.06); } 
+        .card-purple-2 { background-color: #C5A8CC; color: #3B2842; box-shadow: 0 8px 20px rgba(56, 38, 63, 0.06); } 
+        .card-purple-3 { background-color: #80618A; color: #FAF7FB; box-shadow: 0 8px 20px rgba(56, 38, 63, 0.08); } 
+        .card-purple-4 { background-color: #A77BB0; color: #38263F; box-shadow: 0 8px 20px rgba(56, 38, 63, 0.08); } 
+
+        #page-secret .bento-row:nth-child(1) .bento-card:nth-child(1) { flex: 1.2; padding-top: 18px; padding-bottom: 18px; }
+        #page-secret .bento-row:nth-child(1) .bento-card:nth-child(2) { flex: 1; padding-top: 12px; padding-bottom: 12px; }
+        #page-secret .bento-row:nth-child(2) .bento-card:nth-child(1) { flex: 0.9; padding-top: 15px; padding-bottom: 15px; }
+        #page-secret .bento-row:nth-child(2) .bento-card:nth-child(2) { flex: 1.4; padding-top: 15px; padding-bottom: 15px; }
+        #page-secret .bento-row:nth-child(3) .bento-card:nth-child(1) { flex: 1.1; padding-top: 14px; padding-bottom: 14px; }
+        #page-secret .bento-row:nth-child(3) .bento-card:nth-child(2) { flex: 1; padding-top: 14px; padding-bottom: 14px; }
+        #page-secret .bento-row:nth-child(4) .bento-card:nth-child(1) { flex: 0.8; padding-top: 16px; padding-bottom: 16px; }
+        #page-secret .bento-row:nth-child(4) .bento-card:nth-child(2) { flex: 1.5; padding-top: 16px; padding-bottom: 16px; }
+
+        /* --- PAGE 2 : DONNÉES / EXPLOITS --- */
+        .card-green-light  { background-color: #BCD3C2; color: #172922; box-shadow: 0 8px 20px rgba(38, 61, 53, 0.08); } 
+        .card-green-medium { background-color: #8EBA9A; color: #172922; box-shadow: 0 8px 20px rgba(38, 61, 53, 0.08); } 
+        .card-green-dark   { background-color: #4C7561; color: #F7F4E9; box-shadow: 0 8px 20px rgba(38, 61, 53, 0.08); } 
+        .card-green-deep   { background-color: #668B78; color: #F7F4E9; box-shadow: 0 8px 20px rgba(38, 61, 53, 0.08); } 
+
+        #page-exploits .bento-row:nth-child(1) .bento-card:nth-child(1) { flex: 0.8; padding-top: 24px; padding-bottom: 24px; }
+        #page-exploits .bento-row:nth-child(1) .bento-card:nth-child(2) { flex: 1.6; padding-top: 14px; padding-bottom: 14px; }
+        #page-exploits .bento-row:nth-child(2) .bento-card:nth-child(1) { flex: 1; padding-top: 20px; padding-bottom: 20px; }
+        #page-exploits .bento-row:nth-child(3) .bento-card:nth-child(1) { flex: 1.5; padding-top: 16px; padding-bottom: 16px; }
+        #page-exploits .bento-row:nth-child(3) .bento-card:nth-child(2) { flex: 0.9; padding-top: 28px; padding-bottom: 28px; }
+        #page-exploits .bento-row:nth-child(4) .bento-card:nth-child(1) { flex: 1; padding-top: 18px; padding-bottom: 18px; }
+        #page-exploits .bento-row:nth-child(4) .bento-card:nth-child(2) { flex: 1.2; padding-top: 18px; padding-bottom: 18px; }
+
+        .stat-label-bottom {
+            font-size: 0.74em;
+            font-weight: 600;
+            margin-top: 4px;
+            line-height: 1.25;
+        }
+
+        .odometer {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: clamp(1.2em, 2.5vw, 1.8em);
+            line-height: 1.1em;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            height: 1.1em;
+        }
+
+        .digit-col {
+            display: inline-block;
+            height: 1.1em;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .digit-strip {
+            display: flex;
+            flex-direction: column;
+            will-change: transform;
+        }
+
+        .digit-strip span {
+            display: block;
+            height: 1.1em;
+            line-height: 1.1em;
+            text-align: center;
+        }
+
+        /* --- BARRE DE RECHERCHE ET MENU DÉROULANT INTÉGRÉ (CENTRÉ POUR PAGE 3) --- */
+        .controls-container {
+            z-index: 20;
+            width: 100%;
+            max-width: 320px;
+            flex-shrink: 0;
+            margin: 0 auto 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .search-container {
+            width: 100%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: #ffffff;
+            border: 2px solid rgba(184, 111, 93, 0.35);
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+            transition: all 0.3s ease;
+        }
+
+        .search-container:focus-within {
+            border-color: #B86F5D;
+            box-shadow: 0 6px 20px rgba(184, 111, 93, 0.15);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            width: 16px;
+            height: 16px;
+            pointer-events: none;
+            fill: none;
+            stroke: #B86F5D;
+            stroke-width: 2.2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 52px 10px 44px;
+            border: none;
+            border-radius: 50px;
+            font-family: inherit;
+            font-size: 0.9em;
+            text-align: left;
+            outline: none;
+            background: transparent;
+            color: #4B4038;
+        }
+
+        .search-input::placeholder {
+            color: rgba(184, 111, 93, 0.6);
+            text-align: left;
+        }
+
+        .dropdown-toggle-btn {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            border-left: 1.5px solid rgba(184, 111, 93, 0.3);
+            cursor: pointer;
+            padding: 6px 12px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            outline: none;
+        }
+
+        .dropdown-toggle-btn svg {
+            width: 14px;
+            height: 14px;
+            stroke: #B86F5D;
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            fill: none;
+            transition: transform 0.3s ease;
+        }
+
+        .search-container.dropdown-open .dropdown-toggle-btn svg {
+            transform: rotate(180deg);
+        }
+
+        .custom-dropdown-menu {
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0;
+            width: 100%;
+            background: #ffffff;
+            border: 2px solid rgba(184, 111, 93, 0.35);
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(80, 53, 47, 0.12);
+            z-index: 100;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            animation: fadeInMenu 0.2s ease forwards;
+        }
+
+        .custom-dropdown-menu.show {
+            display: flex;
+        }
+
+        @keyframes fadeInMenu {
+            from { opacity: 0; transform: translateY(-6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .dropdown-item {
+            padding: 10px 16px;
+            text-align: left;
+            font-size: 0.85em;
+            color: #4B4038;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s ease, color 0.2s ease;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dropdown-item input[type="checkbox"] {
+            cursor: pointer;
+            accent-color: #B86F5D;
+            width: 15px;
+            height: 15px;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(184, 111, 93, 0.1);
+            color: #8C4736;
+        }
+
+        /* --- PAGE 3 : CONSTELLATION DE BULLES --- */
+        .constellation-container {
+            position: relative;
+            width: 100%;
+            max-width: 950px;
+            height: 100%;
+            max-height: 520px;
+            margin: 0 auto;
+            z-index: 5;
+            padding: 15px;
+            overflow: visible;
+            flex-grow: 1;
+        }
+
+        .dot-card {
+            position: absolute;
+            width: var(--dot-size, 30px);
+            height: var(--dot-size, 30px);
+            aspect-ratio: 1 / 1 !important;
+            min-width: var(--dot-size, 30px);
+            min-height: var(--dot-size, 30px);
+            left: 0;
+            top: 0;
+            border-radius: 50%;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--c);
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(80, 53, 47, 0.08);
+            transform: translate(-50%, -50%);
+            transform-origin: center center;
+            transition:
+                left 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                top 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                width 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                height 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                background-color 0.4s ease,
+                border-color 0.4s ease,
+                box-shadow 0.6s ease,
+                opacity 0.3s ease;
+            z-index: 2;
+            opacity: 1;
+            touch-action: manipulation;
+            overflow: hidden;
+            will-change: left, top, width, height;
+        }
+
+        .dot-card.is-hidden {
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+
+        .dot-sender,
+        .dot-content {
+            opacity: 0;
+            display: none;
+            transition: opacity 0.2s ease 0.6s; 
+        }
+
+        .dot-card { --txt: #4B4038; }
+
+        /* --- ÉTAT NOM --- */
+        .dot-card.state-name {
+            background-color: var(--bg-msg) !important;
+            border: 2px solid var(--txt);
+            box-shadow: 0 8px 22px rgba(80, 53, 47, 0.15);
+            z-index: 30;
+        }
+
+        .dot-card.state-name .dot-inner-box {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            width: 100%;
+            height: 100%;
+            padding: 14px;
+        }
+
+        .dot-card.state-name .dot-sender {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+            font-weight: 700;
+            font-size: 0.75em;
+            color: var(--txt);
+            text-align: center;
+            line-height: 1.25;
+        }
+
+        .dot-card.state-name .dot-sender > div {
+            white-space: normal;
+            overflow: visible;
+            text-overflow: clip;
+            max-width: 100%;
+        }
+
+        .name-group {
+            display: inline-block;
+            white-space: nowrap;
+        }
+        
+        .name-group-wrap {
+            display: inline;
+            white-space: normal;
+            text-align: center;
+        }
+
+        .dot-category {
+            font-weight: 500;
+            font-size: 0.8em;
+            opacity: 0.85;
+            margin-top: 4px;
+            white-space: normal;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 3px;
+            width: 100%;
+            text-align: center;
+            color: var(--txt);
+        }
+
+        .dot-category::before,
+        .dot-category::after {
+            content: "–";
+            opacity: 0.7;
+            flex-shrink: 0;
+        }
+
+        .dot-count {
+            font-weight: 600;
+            font-size: 0.75em;
+            opacity: 0.75;
+            margin-top: 3px;
+            white-space: nowrap;
+            color: var(--txt);
+        }
+
+        /* --- ÉTAT MESSAGE --- */
+        .dot-card.state-message {
+            background-color: var(--bg-msg) !important;
+            border: 2px solid var(--txt);
+            box-shadow: 0 14px 35px rgba(80, 53, 47, 0.2);
+            z-index: 100;
+        }
+
+        .dot-card.state-message .dot-inner-box {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            width: 100%;
+            height: 100%;
+            padding: 18px;
+        }
+
+        .dot-card.state-message .dot-sender {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 1;
+            font-weight: 700;
+            font-size: 0.72em;
+            margin-bottom: 5px;
+            border-bottom: 1px solid rgba(75, 64, 56, 0.2);
+            padding-bottom: 4px;
+            text-align: center;
+            color: var(--txt);
+            line-height: 1.2;
+            flex-shrink: 0;
+            white-space: normal;
+        }
+
+        .dot-card.state-message .dot-content {
+            width: 100%;
+            display: block;
+            opacity: 1;
+            text-align: center;
+            font-size: 0.65em;
+            line-height: 1.35;
+            color: var(--txt);
+            overflow-wrap: break-word;
+            word-break: normal;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="section" id="page-intro">
+        <div class="section-title">Page 1</div>
+        
+        <div class="bento-container">
+            <div class="bento-row">
+                <div class="bento-card card-rose-light">
+                    <div style="font-weight: 700; font-size: 1.1em;">...</div>
+                    <div class="stat-label-bottom">Encadré 1</div>
+                </div>
+                <div class="bento-card card-rose-dark">
+                    <div style="font-weight: 700; font-size: 1.1em;">...</div>
+                    <div class="stat-label-bottom">Encadré 2</div>
+                </div>
+            </div>
+
+            <div class="bento-row">
+                <div class="bento-card card-rose-medium">
+                    <div style="font-weight: 700; font-size: 1.1em;">...</div>
+                    <div class="stat-label-bottom">Encadré 3</div>
+                </div>
+                <div class="bento-card card-rose-deep">
+                    <div style="font-weight: 700; font-size: 1.1em;">...</div>
+                    <div class="stat-label-bottom">Encadré 4</div>
+                </div>
+            </div>
+
+            <div class="bento-row">
+                <div class="bento-card card-rose-dark">
+                    <div style="font-weight: 700; font-size: 1.1em;">...</div>
+                    <div class="stat-label-bottom">Encadré 5</div>
+                </div>
+                <div class="bento-card card-rose-light">
+                    <div style="font-weight: 700; font-size: 1.1em;">...</div>
+                    <div class="stat-label-bottom">Encadré 6</div>
+                </div>
+            </div>
+
+            <div class="bento-row">
+                <div class="bento-card card-rose-deep">
+                    <div style="font-weight: 700; font-size: 1.1em;">...</div>
+                    <div class="stat-label-bottom">Encadré 7</div>
+                </div>
+                <div class="bento-card card-rose-medium">
+                    <div style="font-weight: 700; font-size: 1.1em;">...</div>
+                    <div class="stat-label-bottom">Encadré 8</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" id="page-exploits">
+        <div class="section-title">Page 2</div>
+        
+        <div class="bento-container">
+            <div class="bento-row">
+                <div class="bento-card card-green-light">
+                    <div class="odometer" data-start="10" data-end="25" data-step="5"></div>
+                    <div class="stat-label-bottom">RP écrits</div>
+                </div>
+                <div class="bento-card card-green-dark">
+                    <div class="odometer" data-start="0" data-end="5" data-step="1"></div>
+                    <div class="stat-label-bottom">matchs de Quidditch arbitrés</div>
+                </div>
+            </div>
+
+            <div class="bento-row">
+                <div class="bento-card card-green-medium" style="flex: 1;">
+                    <div class="odometer" data-start="0" data-end="20" data-step="5"></div>
+                    <div class="stat-label-bottom">sessions lancées du Ballet volant</div>
+                </div>
+            </div>
+
+            <div class="bento-row">
+                <div class="bento-card card-green-deep">
+                    <div class="odometer" data-start="0" data-end="2" data-step="1"></div>
+                    <div class="stat-label-bottom">animations organisées<br><small style="font-weight: 400;">avec</small></div>
+                    <div class="odometer" data-start="55" data-end="75" data-step="5"></div>
+                    <div class="stat-label-bottom">participations au total<br><small style="font-weight: 400;">(45 + 31)</small></div>
+                </div>
+                <div class="bento-card card-green-light">
+                    <div class="odometer" data-start="880" data-end="900" data-step="5"></div>
+                    <div class="stat-label-bottom">messages postés sur le forum</div>
+                </div>
+            </div>
+
+            <div class="bento-row">
+                <div class="bento-card card-green-medium">
+                    <div style="font-weight: 700; font-size: 1.1em;">...</div>
+                    <div class="stat-label-bottom">Nouveau bonus 1</div>
+                </div>
+                <div class="bento-card card-green-dark">
+                    <div style="font-weight: 700; font-size: 1.1em;">...</div>
+                    <div class="stat-label-bottom">Nouveau bonus 2</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section" id="page-cloud">
+        <div class="section-title">PAGE 3</div>
+        
+		<div class="controls-container">
+            <div class="search-container" id="search-container-box">
+                <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <input type="text" class="search-input" id="search-bar" placeholder="Rechercher..." oninput="handleSearchInput(this.value)">
+                <button class="dropdown-toggle-btn" id="dropdown-toggle" onclick="toggleDropdownMenu(event)" aria-label="Menu des catégories">
+                    <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </button>
+                <div class="custom-dropdown-menu" id="custom-dropdown">
+                    <label class="dropdown-item"><input type="checkbox" value="EEC" onchange="handleCheckboxChange()"> EEC</label>
+                    <label class="dropdown-item"><input type="checkbox" value="Gryffondor" onchange="handleCheckboxChange()"> Gryffondor</label>
+                    <label class="dropdown-item"><input type="checkbox" value="Joueur" onchange="handleCheckboxChange()"> Joueurs de Quidditch</label>
+                    <label class="dropdown-item"><input type="checkbox" value="Poufsouffle" onchange="handleCheckboxChange()"> Poufsouffle</label>
+                    <label class="dropdown-item"><input type="checkbox" value="Professeur" onchange="handleCheckboxChange()"> Professeur</label>
+                    <label class="dropdown-item"><input type="checkbox" value="Serdaigle" onchange="handleCheckboxChange()"> Serdaigle</label>
+                    <label class="dropdown-item"><input type="checkbox" value="Serpentard" onchange="handleCheckboxChange()"> Serpentard</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="constellation-container" id="cloud-container">
+            
+            <!-- Damon Nikonov -->
+            <div class="dot-card" data-name="Damon Nikonov" data-cat="EEC" data-house="" data-gender="male" style="--dot-size: 30px;">
+                <div class="dot-sender">Damon Nikonov</div><div class="dot-content">Blablabla</div>
+            </div>
+
+            <!-- Cinaed Wallace -->
+            <div class="dot-card" data-name="Cinaed Wallace" data-cat="EEC" data-house="" data-gender="female" style="--dot-size: 38px;">
+                <div class="dot-sender">Cinaed Wallace</div><div class="dot-content">Je pense qu'à ce niveau je fais plus partie de ta famille IRL que de la mienne, donc ai-je beaucoup à dire ? Je ne suis pas sûre, mais en tout cas tu m'es très précieuse IRL comme sur PFR et j'aime voir tes petits perso se balader partout. dragon</div>
+            </div>
+
+            <div class="dot-card" data-name="Cinaed Wallace" data-cat="EEC" data-house="" data-gender="female" style="--dot-size: 36px;">
+                <div class="dot-sender">Cinaed Wallace</div><div class="dot-content">GUSTAVE WILL BE IN MY HEART FOREVER. Espèce de brute à me rappeler à chaque coin de rue cet événement traumatisant de ma vie. Heureusement, Verso est là pour me remonter le moral. Et heureusement, dans mes fanfic, il est moins hétéro refoulé que Rahima, pfiou !</div>
+            </div>
+
+            <div class="dot-card" data-name="Cinaed Wallace" data-cat="EEC" data-house="" data-gender="female" style="--dot-size: 34px;">
+                <div class="dot-sender">Cinaed Wallace</div><div class="dot-content">Stp, fais des perso heureux ET qui soient pas des p'tits cons, un jour. Pense à nous, qui avons au choix envie de baffer ou de câliner tes perso pour pleurer. Cela dit je resterai heureuse à jamais d'avoir pécho tes deux perso élèves (fin', dragué le premier mais c'pareil).</div>
+            </div>
+
+            <div class="dot-card" data-name="Cinaed Wallace" data-cat="EEC" data-house="" data-gender="female" style="--dot-size: 32px;">
+                <div class="dot-sender">Cinaed Wallace</div><div class="dot-content">Stp dis pas à ta mère que j'ai jamais fait de yoga malgré le super tapis qu'elle m'a offert. Dis lui plutôt que j'ai gardé les cailloux anti-stress et, tavu, ils fonctionnent de fou (céfo).</div>
+            </div>
+
+            <div class="dot-card" data-name="Cinaed Wallace" data-cat="EEC" data-house="" data-gender="female" style="--dot-size: 35px;">
+                <div class="dot-sender">Cinaed Wallace</div><div class="dot-content">Parfois, je rêve de ton nain lyrique bourré à la bière d'elfe de BG3 et je ne sais jamais si ce sont des cauchemars ou des rêves. Faudra qu'on recommence cette partie, et promis j'essaierai de pas (trop) parler avec Astarion. (g menti).</div>
+            </div>
+
+            <!-- Hyacinthe Kyros -->
+            <div class="dot-card" data-name="Hyacinthe Kyros" data-cat="EEC" data-house="" data-gender="female" style="--dot-size: 36px;">
+                <div class="dot-sender">Hyacinthe Kyros</div><div class="dot-content">1 an déjà ! On est arrivé presque au même moment, et tu as déjà tant fait par ici ! C'est un véritable plaisir de pouvoir être sur PFR à tes côtés, tant individuellement qu'en tant qu'équipe. Tu nous apportes tant... à la fois par ton investissement et ta joie de vivre ♡</div>
+            </div>
+
+            <div class="dot-card" data-name="Hyacinthe Kyros" data-cat="EEC" data-house="" data-gender="female" style="--dot-size: 30px;">
+                <div class="dot-sender">Hyacinthe Kyros</div><div class="dot-content">Le message sérieux étant passé - je veux ajouter que j'espère que tu resteras loooongtemps parmi nous ! C'est vraiment chouette de discuter, de RP, d'organiser des trucs... enfin, tout ce qu'on fait sur le site !</div>
+            </div>
+
+            <!-- Erza McGowan -->
+            <div class="dot-card" data-name="Erza McGowan" data-cat="Joueur.euse de Quidditch" data-house="Serpentard" data-gender="female" style="--dot-size: 40px;">
+                <div class="dot-sender">Erza McGowan</div><div class="dot-content">À mon mentor qui est devenue une de mes amies le plus proches, sache que je t'aime fort fort fort T'es la meilleure en tout (un jour je gagnerai contre toi je le jure) et ne cesse jamais de resplendir partout où tu vas comme tu le fais. Plein de bisousss</div>
+            </div>
+
+            <!-- Adeline Sgaeyl -->
+            <div class="dot-card" data-name="Adeline Sgaeyl" data-cat="Joueur.euse de Quidditch" data-house="Serdaigle" data-gender="female" style="--dot-size: 38px;">
+                <div class="dot-sender">Adeline Sgaeyl</div><div class="dot-content">Mais nooon, maintenant je vais enfin pouvoir te dire que tu es une vieille sur le site! (Pas autant qu'irl mais-...) Un immense merci pour toute l'énergie que tu mets à chaque arbitrage de match, pour tes réponses aux questions, pour tes ponctualités un petit peu (beaucoup) effrayante... TU GÈRES, EN FAIT. Voilà, c'est dit.</div>
+            </div>
+
+            <div class="dot-card" data-name="Adeline Sgaeyl" data-cat="Joueur.euse de Quidditch" data-house="Serdaigle" data-gender="female" style="--dot-size: 36px;">
+                <div class="dot-sender">Adeline Sgaeyl</div><div class="dot-content">Parlons de ton jeu à session incroyable (auquel je n'ai jamais "officiellement" participé, quelle honte)... Je ne sais pas où tu trouves toutes ces idées mais franchement, chapeau bas. Ça, en plus du fait que tu écoutes tooooutes les musiques envoyées ! (J'attends toujours un retour sur la playlist du feu que j'avais composée juste pour toi, mh.)</div>
+            </div>
+
+            <div class="dot-card" data-name="Adeline Sgaeyl" data-cat="Joueur.euse de Quidditch" data-house="Serdaigle" data-gender="female" style="--dot-size: 34px;">
+                <div class="dot-sender">Adeline Sgaeyl</div><div class="dot-content">"Don't give up, it's a little complicated. All tied up, no more love and I'd hate to see you waiting. They say it's all been done, but they haven't seen the best of [you]-eh-eh-eh. So [you] got one more run and it's gonna be a sight to see-eh-eh-eh. HAD TO HAVE HIGH, HIGH HOPES FOR A LIVING.</div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="section" id="page-secret">
+        <div class="section-title">Page 4</div>
+        
+        <div class="bento-container">
+            <div class="bento-row">
+                <div class="bento-card card-purple-1">
+                    <div style="font-weight: 700; font-size: 1.1em;">...</div>
+                    <div class="stat-label-bottom">Encadré 1</div>
+                </div>
+                <div class="bento-card card-purple-3">
+                    <div style="font-weight: 700; font-size: 1.1em;">...</div>
+                    <div class="stat-label-bottom">Encadré 2</div>
+                </div>
+            </div>
+
+            <div class="bento-row">
+                <div class="bento-card card-purple-2">
+                    <div style="font-weight: 700; font-size: 1.1em;">...</div>
+                    <div class="stat-label-bottom">Encadré 3</div>
+                </div>
+                <div class="bento-card card-purple-4">
+                    <div style="font-weight: 700; font-size: 1.1em;">...</div>
+                    <div class="stat-label-bottom">Encadré 4</div>
+                </div>
+            </div>
+
+            <div class="bento-row">
+                <div class="bento-card card-purple-3">
+                    <div style="font-weight: 700; font-size: 1.1em;">...</div>
+                    <div class="stat-label-bottom">Encadré 5</div>
+                </div>
+                <div class="bento-card card-purple-1">
+                    <div style="font-weight: 700; font-size: 1.1em;">...</div>
+                    <div class="stat-label-bottom">Encadré 6</div>
+                </div>
+            </div>
+
+            <div class="bento-row">
+                <div class="bento-card card-purple-4">
+                    <div style="font-weight: 700; font-size: 1.1em;">...</div>
+                    <div class="stat-label-bottom">Encadré 7</div>
+                </div>
+                <div class="bento-card card-purple-2">
+                    <div style="font-weight: 700; font-size: 1.1em;">...</div>
+                    <div class="stat-label-bottom">Encadré 8</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* --- PAGE 2 : ODOMÈTRE --- */
+        function initOdometers() {
+            const odometers = document.querySelectorAll('.odometer');
+            
+            odometers.forEach(odo => {
+                const startNum = parseInt(odo.getAttribute('data-start'), 10);
+                const endNum = parseInt(odo.getAttribute('data-end'), 10);
+                const step = parseInt(odo.getAttribute('data-step') || "5", 10);
+                
+                const sequence = [];
+                for (let i = startNum; i <= endNum; i += step) {
+                    sequence.push(i.toString());
+                }
+                if (sequence[sequence.length - 1] !== endNum.toString()) {
+                    sequence.push(endNum.toString());
+                }
+                
+                const maxLen = sequence[sequence.length - 1].length;
+                const columnsData = [];
+                odo.innerHTML = '';
+                
+                for (let colIdx = 0; colIdx < maxLen; colIdx++) {
+                    const colDiv = document.createElement('div');
+                    colDiv.className = 'digit-col';
+                    
+                    const stripDiv = document.createElement('div');
+                    stripDiv.className = 'digit-strip';
+                    
+                    const digitPath = [];
+                    sequence.forEach(numStr => {
+                        const padded = numStr.padStart(maxLen, '0');
+                        const char = padded[colIdx];
+                        if (digitPath.length === 0 || digitPath[digitPath.length - 1] !== char) {
+                            digitPath.push(char);
+                        }
+                    });
+                    
+                    digitPath.forEach(char => {
+                        const span = document.createElement('span');
+                        span.textContent = char;
+                        stripDiv.appendChild(span);
+                    });
+                    
+                    colDiv.appendChild(stripDiv);
+                    odo.appendChild(colDiv);
+                    
+                    columnsData.push({
+                        strip: stripDiv,
+                        stepsCount: digitPath.length
+                    });
+                }
+                
+                odo._animate = () => {
+                    columnsData.forEach(col => {
+                        col.strip.style.transition = 'none';
+                        col.strip.style.transform = 'translateY(0)';
+                        
+                        if (col.stepsCount > 1) {
+                            requestAnimationFrame(() => {
+                                requestAnimationFrame(() => {
+                                    const maxOffset = (col.stepsCount - 1) * 1.1;
+                                    col.strip.style.transition = 'transform 2.2s cubic-bezier(0.2, 0.8, 0.2, 1)';
+                                    col.strip.style.transform = `translateY(-${maxOffset}em)`;
+                                });
+                            });
+                        }
+                    });
+                };
+            });
+        }
+
+        const exploitsSection = document.getElementById('page-exploits');
+
+        const exploitsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const odometers = entry.target.querySelectorAll('.odometer');
+                    Array.from(odometers).forEach(odo => {
+                        if (odo._animate) odo._animate();
+                    });
+                }
+            });
+        }, { threshold: 0.4 });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initOdometers();
+            exploitsObserver.observe(exploitsSection);
+        });
+
+        /* --- PAGE 3 : CONSTELLATION & PALETTE EXACTE ASSOCIÉE --- */
+        const container = document.getElementById('cloud-container');
+        const dots = Array.from(container.querySelectorAll('.dot-card'));
+        let originalLayout = new Map();
+        let activeDot = null;
+        let interactionMode = 'none';
+        let isMobile = window.matchMedia('(hover: none)').matches;
+
+        // Tableau officiel exact des correspondances (Élément marron -> Fond très clair associé)
+        const brownColorPairs = [
+            { dark: '#806653', light: '#F5EDE5' },
+            { dark: '#8A6D5B', light: '#F6EEE6' },
+            { dark: '#92715D', light: '#F7EFE7' },
+            { dark: '#987663', light: '#F7F0E8' },
+            { dark: '#9F7B66', light: '#F8F0E8' },
+            { dark: '#A4816B', light: '#F8F1E9' },
+            { dark: '#AA866E', light: '#F9F1E9' },
+            { dark: '#B08B72', light: '#F9F2EA' },
+            { dark: '#B58F77', light: '#F9F2EB' },
+            { dark: '#BA957D', light: '#FAF3EC' },
+            { dark: '#C09B82', light: '#FAF3ED' },
+            { dark: '#C5A087', light: '#FAF4EE' },
+            { dark: '#C9A58D', light: '#FBF5EF' },
+            { dark: '#C3A08A', light: '#FAF4EE' },
+            { dark: '#B99780', light: '#FAF3EC' },
+            { dark: '#AD8B76', light: '#F9F2EA' },
+            { dark: '#A58170', light: '#F8F1E9' },
+            { dark: '#9B7969', light: '#F7F0E8' },
+            { dark: '#917164', light: '#F6EFE7' },
+            { dark: '#876A5C', light: '#F6EEE6' },
+            { dark: '#7F6458', light: '#F5EDE5' },
+            { dark: '#8C7065', light: '#F6EFE7' },
+            { dark: '#987C70', light: '#F8F1EA' },
+            { dark: '#A5897B', light: '#F9F2EB' },
+            { dark: '#B19585', light: '#FAF3ED' },
+            { dark: '#BCA08F', light: '#FAF4EE' },
+            { dark: '#C5AA99', light: '#FBF5F0' },
+            { dark: '#CEB4A2', light: '#FBF6F1' }
+        ];
+
+        // Attribution aléatoire d'un duo rigoureux à chaque bulle
+        dots.forEach((dot) => {
+            const randomPair = brownColorPairs[Math.floor(Math.random() * brownColorPairs.length)];
+            dot.style.setProperty('--c', randomPair.dark);
+            dot.style.setProperty('--bg-msg', randomPair.light);
+        });
+
+        const nameCounts = {};
+        dots.forEach(dot => {
+            const name = dot.getAttribute('data-name') || '';
+            nameCounts[name] = (nameCounts[name] || 0) + 1;
+        });
+
+        const currentIndexes = {};
+        dots.forEach(dot => {
+            const contentDiv = dot.querySelector('.dot-content');
+            if (contentDiv) {
+                dot.dataset.fullText = contentDiv.textContent.trim();
+            }
+
+            const senderDiv = dot.querySelector('.dot-sender');
+            if (!senderDiv) return;
+            const name = dot.getAttribute('data-name') || '';
+            const rawCat = dot.getAttribute('data-cat') || '';
+            const gender = dot.getAttribute('data-gender') || 'male';
+            
+            let category = rawCat;
+            if (rawCat.toLowerCase().includes('quidditch')) {
+                category = (gender === 'female') ? 'Joueuse de Quidditch' : 'Joueur de Quidditch';
+            }
+            
+            currentIndexes[name] = (currentIndexes[name] || 0) + 1;
+            const total = nameCounts[name];
+            
+            const countStr = total > 1 ? `<div class="dot-count">${currentIndexes[name]}/${total}</div>` : '';
+
+            const words = name.split(' ');
+            let formattedNameHtml = '';
+
+            if (words.length === 1) {
+                const safeWord = words[0].replace(/-/g, '&#8209;');
+                formattedNameHtml = `<span class="name-group">${safeWord}</span>`;
+            } else {
+                formattedNameHtml = words.map(w => `<span class="name-group">${w.replace(/-/g, '&#8209;')}</span>`).join(' ');
+            }
+
+            senderDiv.innerHTML = `
+                <div class="name-group-wrap">${formattedNameHtml}</div>
+                <div class="dot-category">${category}</div>
+                ${countStr}
+            `;
+        });
+
+        function getBaseSize(dot) {
+            const value = getComputedStyle(dot).getPropertyValue('--dot-size').trim();
+            const size = parseFloat(value);
+            return Number.isFinite(size) ? size : 30;
+        }
+
+        function getVisibleDots() {
+            return dots.filter(dot => !dot.classList.contains('is-hidden'));
+        }
+
+        function getDotRadius(dot) {
+            const width = parseFloat(dot.style.getPropertyValue('--dot-size')) || parseFloat(dot.dataset.baseWidth) || getBaseSize(dot);
+            return width / 2;
+        }
+
+        function clampPositionToContainer(x, y, radius) {
+            const W = container.clientWidth;
+            const H = container.clientHeight;
+            const minX = radius + 4;
+            const maxX = W - radius - 4;
+            const minY = radius + 4;
+            const maxY = H - radius - 4;
+            return {
+                x: Math.max(minX, Math.min(maxX, x)),
+                y: Math.max(minY, Math.min(maxY, y))
+            };
+        }
+
+        function calculateGap(visibleDots) {
+            const W = container.clientWidth;
+            const H = container.clientHeight;
+            const maxGap = 35;
+            const minGap = 12;
+            const radii = visibleDots.map(dot => getDotRadius(dot));
+
+            for (let gap = maxGap; gap >= minGap; gap -= 1) {
+                const totalDiameter = radii.reduce((sum, radius) => sum + radius * 2, 0);
+                const averageDiameter = totalDiameter / Math.max(radii.length, 1);
+                const approximateColumns = Math.max(1, Math.floor(W / (averageDiameter + gap)));
+                const approximateRows = Math.max(1, Math.ceil(visibleDots.length / approximateColumns));
+                const estimatedHeight = approximateRows * (averageDiameter + gap);
+                if (estimatedHeight <= H * 0.85) {
+                    return gap;
+                }
+            }
+            return minGap;
+        }
+
+        function calculateOriginalLayout() {
+            const visibleDots = getVisibleDots();
+            if (!visibleDots.length) return;
+            const W = container.clientWidth;
+            const H = container.clientHeight;
+            const centerX = W / 2;
+            const centerY = H / 2;
+            const gap = calculateGap(visibleDots);
+
+            const positions = visibleDots.map((dot, index) => {
+                const radius = getDotRadius(dot);
+                const angle = index * 2.399963;
+                const spread = Math.min(W, H) * 0.2;
+                const randomOffset = (Math.random() - 0.5) * 30;
+                
+                const initialX = centerX + Math.cos(angle) * spread + randomOffset;
+                const initialY = centerY + Math.sin(angle) * spread + randomOffset;
+                const clamped = clampPositionToContainer(initialX, initialY, radius);
+
+                return {
+                    dot,
+                    x: clamped.x,
+                    y: clamped.y,
+                    radius
+                };
+            });
+
+            function resolveCollisions() {
+                let hasCollision = false;
+                for (let i = 0; i < positions.length; i++) {
+                    for (let j = i + 1; j < positions.length; j++) {
+                        const a = positions[i];
+                        const b = positions[j];
+                        let dx = b.x - a.x;
+                        let dy = b.y - a.y;
+                        let distance = Math.hypot(dx, dy);
+                        if (distance < 0.01) { dx = 1; dy = 0; distance = 1; }
+                        const requiredDistance = a.radius + b.radius + gap;
+                        if (distance < requiredDistance) {
+                            hasCollision = true;
+                            const overlap = requiredDistance - distance;
+                            const nx = dx / distance;
+                            const ny = dy / distance;
+                            a.x -= nx * overlap * 0.5;
+                            a.y -= ny * overlap * 0.5;
+                            b.x += nx * overlap * 0.5;
+                            b.y += ny * overlap * 0.5;
+                        }
+                    }
+                }
+
+                positions.forEach(p => {
+                    const clamped = clampPositionToContainer(p.x, p.y, p.radius);
+                    p.x = clamped.x;
+                    p.y = clamped.y;
+                });
+                return hasCollision;
+            }
+
+            for (let i = 0; i < 300; i++) {
+                const collision = resolveCollisions();
+                positions.forEach(p => {
+                    const attraction = 0.002;
+                    p.x += (centerX - p.x) * attraction;
+                    p.y += (centerY - p.y) * attraction;
+                });
+                if (!collision) break;
+            }
+
+            originalLayout.clear();
+            positions.forEach(p => {
+                originalLayout.set(p.dot, {
+                    x: p.x,
+                    y: p.y,
+                    width: getBaseSize(p.dot),
+                    height: getBaseSize(p.dot)
+                });
+                p.dot.dataset.baseWidth = getBaseSize(p.dot);
+                p.dot.dataset.baseHeight = getBaseSize(p.dot);
+            });
+
+            restoreOriginalLayout();
+        }
+
+        function restoreOriginalLayout() {
+            dots.forEach(dot => {
+                const original = originalLayout.get(dot);
+                if (!original) return;
+                dot.classList.remove('state-name', 'state-message');
+                
+                const innerBox = dot.querySelector('.dot-inner-box');
+                if (innerBox) {
+                    dot.appendChild(dot.querySelector('.dot-sender'));
+                    const content = dot.querySelector('.dot-content');
+                    if (content) dot.appendChild(content);
+                    innerBox.remove();
+                }
+
+                dot.style.setProperty('--dot-size', `${original.width}px`);
+                dot.style.width = `${original.width}px`;
+                dot.style.height = `${original.width}px`;
+                dot.style.left = `${original.x}px`;
+                dot.style.top = `${original.y}px`;
+
+                const content = dot.querySelector('.dot-content');
+                if (content && dot.dataset.fullText) {
+                    content.textContent = dot.dataset.fullText;
+                }
+            });
+            activeDot = null;
+            interactionMode = 'none';
+        }
+
+        function calculateCompactDiameter(dot, isMessageState = false) {
+            const sender = dot.querySelector('.dot-sender');
+            const content = dot.querySelector('.dot-content');
+            
+            let innerBox = dot.querySelector('.dot-inner-box');
+            if (!innerBox) {
+                innerBox = document.createElement('div');
+                innerBox.className = 'dot-inner-box';
+                innerBox.appendChild(sender);
+                if (isMessageState && content) {
+                    innerBox.appendChild(content);
+                }
+                dot.appendChild(innerBox);
+            }
+
+            const prevSize = dot.style.getPropertyValue('--dot-size');
+            dot.style.setProperty('--dot-size', 'auto');
+            dot.style.width = 'auto';
+            dot.style.height = 'auto';
+            
+            let minW = 60;
+            let maxW = isMessageState ? 420 : 280;
+            let bestSide = maxW;
+
+            while (minW <= maxW) {
+                let mid = Math.floor((minW + maxW) / 2);
+                
+                innerBox.style.width = `${mid}px`;
+                innerBox.style.height = `${mid}px`;
+                
+                let sH = sender.getBoundingClientRect().height;
+                let cH = (isMessageState && content) ? content.getBoundingClientRect().height : 0;
+                let totalContentHeight = sH + cH + ((isMessageState && content) ? 14 : 0);
+                
+                if (totalContentHeight <= mid) {
+                    bestSide = mid;
+                    maxW = mid - 1;
+                } else {
+                    minW = mid + 1;
+                }
+            }
+            
+            innerBox.style.width = '';
+            innerBox.style.height = '';
+            dot.style.setProperty('--dot-size', prevSize);
+            dot.style.width = prevSize;
+            dot.style.height = prevSize;
+            
+            let multiplier = isMessageState ? 1.35 : 1.6;
+            let diameter = Math.ceil(bestSide * multiplier); 
+            
+            const minDiameter = isMessageState ? (window.innerWidth <= 600 ? 105 : 120) : 90;
+            const maxDiameter = isMessageState ? (window.innerWidth <= 600 ? window.innerWidth * 0.8 : 380) : 260;
+            
+            return Math.max(minDiameter, Math.min(maxDiameter, diameter));
+        }
+
+        function applyTemporaryLayout(activeDot, activeSize) {
+            const original = originalLayout.get(activeDot);
+            if (!original) return;
+
+            const activeRadius = activeSize / 2;
+            const clampedActive = clampPositionToContainer(original.x, original.y, activeRadius);
+            const targetX = clampedActive.x;
+            const targetY = clampedActive.y;
+
+            activeDot.style.left = `${targetX}px`;
+            activeDot.style.top = `${targetY}px`;
+
+            const others = getVisibleDots().filter(dot => dot !== activeDot);
+            const othersPositions = [];
+
+            others.forEach(dot => {
+                const pos = originalLayout.get(dot);
+                if (!pos) return;
+                
+                let targetSize = pos.width;
+                if (interactionMode === 'message') {
+                    targetSize = Math.max(16, pos.width * 0.65);
+                    dot.style.setProperty('--dot-size', `${targetSize}px`);
+                    dot.style.width = `${targetSize}px`;
+                    dot.style.height = `${targetSize}px`;
+                }
+
+                let x = pos.x;
+                let y = pos.y;
+                let dx = x - targetX;
+                let dy = y - targetY;
+                let distance = Math.hypot(dx, dy);
+                if (distance < 0.01) { dx = 1; dy = 0; distance = 1; }
+
+                const dotRadius = targetSize / 2;
+                const safetyMargin = interactionMode === 'message' ? 14 : 10;
+                const minDistance = activeRadius + dotRadius + safetyMargin;
+
+                if (distance < minDistance) {
+                    const overlap = minDistance - distance;
+                    x += (dx / distance) * overlap;
+                    y += (dy / distance) * overlap;
+                }
+
+                const clampedOther = clampPositionToContainer(x, y, dotRadius);
+                othersPositions.push({ dot, x: clampedOther.x, y: clampedOther.y, radius: dotRadius });
+            });
+
+            for (let k = 0; k < 120; k++) {
+                let collision = false;
+
+                for (let i = 0; i < othersPositions.length; i++) {
+                    const p = othersPositions[i];
+                    let dxA = p.x - targetX;
+                    let dyA = p.y - targetY;
+                    let distA = Math.hypot(dxA, dyA);
+                    if (distA < 0.01) { dxA = 1; dyA = 0; distA = 1; }
+                    
+                    const minDistA = activeRadius + p.radius + (interactionMode === 'message' ? 14 : 8);
+                    if (distA < minDistA) {
+                        collision = true;
+                        const overA = minDistA - distA;
+                        p.x += (dxA / distA) * overA;
+                        p.y += (dyA / distA) * overA;
+                    }
+
+                    for (let j = i + 1; j < othersPositions.length; j++) {
+                        const a = othersPositions[i];
+                        const b = othersPositions[j];
+                        let dx = b.x - a.x;
+                        let dy = b.y - a.y;
+                        let distance = Math.hypot(dx, dy);
+                        if (distance < 0.01) { dx = 1; dy = 0; distance = 1; }
+                        const required = a.radius + b.radius + 8;
+
+                        if (distance < required) {
+                            collision = true;
+                            const overlap = required - distance;
+                            const nx = dx / distance;
+                            const ny = dy / distance;
+                            a.x -= nx * overlap * 0.5;
+                            a.y -= ny * overlap * 0.5;
+                            b.x += nx * overlap * 0.5;
+                            b.y += ny * overlap * 0.5;
+                        }
+                    }
+                }
+
+                othersPositions.forEach(p => {
+                    const clamped = clampPositionToContainer(p.x, p.y, p.radius);
+                    p.x = clamped.x;
+                    p.y = clamped.y;
+                });
+
+                if (!collision) break;
+            }
+
+            othersPositions.forEach(p => {
+                p.dot.style.left = `${p.x}px`;
+                p.dot.style.top = `${p.y}px`;
+            });
+        }
+
+        function showName(dot) {
+            if (activeDot && activeDot !== dot) {
+                restoreOriginalLayout();
+            }
+            activeDot = dot;
+            interactionMode = 'name';
+
+            dot.classList.remove('state-message');
+            dot.classList.add('state-name');
+
+            const sender = dot.querySelector('.dot-sender');
+            let innerBox = dot.querySelector('.dot-inner-box');
+            if (!innerBox) {
+                innerBox = document.createElement('div');
+                innerBox.className = 'dot-inner-box';
+                innerBox.appendChild(sender);
+                dot.appendChild(innerBox);
+            }
+
+            const compactDiameter = calculateCompactDiameter(dot, false);
+            
+            void dot.offsetWidth;
+
+            dot.style.setProperty('--dot-size', `${compactDiameter}px`);
+            dot.style.width = `${compactDiameter}px`;
+            dot.style.height = `${compactDiameter}px`;
+            applyTemporaryLayout(dot, compactDiameter);
+        }
+
+        function showMessage(dot) {
+            activeDot = dot;
+            interactionMode = 'message';
+
+            const content = dot.querySelector('.dot-content');
+            if (!content) return;
+
+            const fullText = dot.dataset.fullText || content.textContent.trim();
+            content.textContent = fullText;
+
+            dot.classList.remove('state-name');
+            dot.classList.add('state-message');
+
+            let innerBox = dot.querySelector('.dot-inner-box');
+            if (innerBox && !innerBox.contains(content)) {
+                innerBox.appendChild(content);
+            }
+
+            const compactDiameter = calculateCompactDiameter(dot, true);
+            
+            void dot.offsetWidth;
+
+            dot.style.setProperty('--dot-size', `${compactDiameter}px`);
+            dot.style.width = `${compactDiameter}px`;
+            dot.style.height = `${compactDiameter}px`;
+            applyTemporaryLayout(dot, compactDiameter);
+        }
+
+        dots.forEach(dot => {
+            dot.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (!isMobile) {
+                    if (interactionMode === 'message') {
+                        restoreOriginalLayout();
+                        return;
+                    }
+                    showMessage(dot);
+                    return;
+                }
+                if (activeDot === dot) {
+                    if (interactionMode === 'name') {
+                        showMessage(dot);
+                        return;
+                    } else if (interactionMode === 'message') {
+                        restoreOriginalLayout();
+                        return;
+                    }
+                }
+                showName(dot);
+            });
+
+            dot.addEventListener('mouseenter', function() {
+                if (isMobile || interactionMode === 'message') return;
+                showName(dot);
+            });
+
+            dot.addEventListener('mouseleave', function() {
+                if (isMobile || interactionMode === 'message') return;
+                restoreOriginalLayout();
+            });
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.search-container')) {
+                document.getElementById('custom-dropdown').classList.remove('show');
+                document.getElementById('search-container-box').classList.remove('dropdown-open');
+            }
+            if (e.target.closest('.dot-card') || e.target.closest('.controls-container')) return;
+            if (interactionMode !== 'none') {
+                restoreOriginalLayout();
+            }
+        });
+
+        function applyFilters() {
+            const searchBar = document.getElementById('search-bar');
+            const rawQuery = searchBar.value;
+            
+            if (rawQuery.trim() === '') {
+                const checkboxes = document.querySelectorAll('#custom-dropdown input[type="checkbox"]');
+                checkboxes.forEach(cb => cb.checked = false);
+            }
+
+            const terms = rawQuery.split(',').map(t => t.trim().toLowerCase()).filter(t => t.length > 0);
+
+            restoreOriginalLayout();
+
+            dots.forEach(dot => {
+                const name = (dot.getAttribute('data-name') || '').toLowerCase();
+                const rawCat = (dot.getAttribute('data-cat') || '').toLowerCase();
+                const gender = (dot.getAttribute('data-gender') || 'male').toLowerCase();
+                const house = (dot.getAttribute('data-house') || '').toLowerCase();
+                
+                let dynamicCat = rawCat;
+                if (rawCat.includes('quidditch')) {
+                    dynamicCat = (gender === 'female') ? 'joueuse de quidditch' : 'joueur de quidditch';
+                }
+                
+                const text = (dot.dataset.fullText || dot.querySelector('.dot-content')?.textContent || '').toLowerCase();
+
+                let matches = true;
+                if (terms.length > 0) {
+                    matches = terms.every(term => {
+                        let searchTerm = term;
+                        // Extension des termes de recherche pour correspondre à toutes les variations demandées
+                        if (searchTerm === 'joueur' || searchTerm === 'joueuse' || searchTerm === 'joueurs de quidditch' || searchTerm === 'joueuse de quidditch') {
+                            searchTerm = 'quidditch';
+                        }
+                        return name.includes(searchTerm) || 
+                               dynamicCat.includes(searchTerm) || 
+                               house.includes(searchTerm) || 
+                               text.includes(searchTerm);
+                    });
+                }
+
+                dot.classList.toggle('is-hidden', !matches);
+            });
+
+            setTimeout(() => { calculateOriginalLayout(); }, 30);
+        }
+
+        function handleSearchInput(query) {
+            const checkboxes = document.querySelectorAll('#custom-dropdown input[type="checkbox"]');
+            if (query.trim() === '') {
+                checkboxes.forEach(cb => cb.checked = false);
+            } else {
+                const terms = query.split(',').map(t => t.trim().toLowerCase());
+                checkboxes.forEach(cb => {
+                    const val = cb.value.toLowerCase();
+                    cb.checked = terms.some(t => t === val || (val === 'joueur' && (t.includes('joueur') || t.includes('joueuse'))));
+                });
+            }
+            applyFilters();
+        }
+
+        function handleCheckboxChange() {
+            const checkboxes = document.querySelectorAll('#custom-dropdown input[type="checkbox"]');
+            const checkedValues = Array.from(checkboxes).filter(cb => cb.checked).map(cb => {
+                // Si c'est l'option Joueur, on écrit bien "Joueurs de Quidditch" dans la barre de recherche
+                return cb.value === 'Joueur' ? 'Joueurs de Quidditch' : cb.value;
+            });
+            
+            const searchBar = document.getElementById('search-bar');
+            searchBar.value = checkedValues.join(', ');
+            
+            applyFilters();
+        }
+
+        function toggleDropdownMenu(e) {
+            e.stopPropagation();
+            const dropdown = document.getElementById('custom-dropdown');
+            const searchBox = document.getElementById('search-container-box');
+            dropdown.classList.toggle('show');
+            searchBox.classList.toggle('dropdown-open');
+        }
+
+        function initializeConstellation() {
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    calculateOriginalLayout();
+                });
+            });
+        }
+
+        let resizeTimer;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                restoreOriginalLayout();
+                calculateOriginalLayout();
+            }, 250);
+        });
+
+        window.matchMedia('(hover: none)').addEventListener('change', event => {
+            isMobile = event.matches;
+        });
+
+        document.addEventListener('DOMContentLoaded', initializeConstellation);
+    </script>
+</body>
+</html>
