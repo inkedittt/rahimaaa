@@ -75,6 +75,122 @@
         #page-cloud .section-title { text-align: center; }
         #page-secret { background-color: #F7F2F9; color: #38263F; }
 
+        /* --- BARRE D'ICÔNES DE NAVIGATION (RESPONSIVE BAS / DROITE) --- */
+        .bottom-nav-bar {
+            position: absolute;
+            z-index: 50;
+            display: flex;
+            transition: transform 0.3s ease;
+        }
+
+        /* Sur Mobile / Tablettes (par défaut) : Barre en bas horizontale */
+        .bottom-nav-bar {
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            flex-direction: row;
+            gap: 20px;
+            padding: 6px 14px;
+        }
+
+        /* Sur Ordinateur (écrans larges > 900px) : Barre à droite verticale, fixe et toujours visible */
+        @media (min-width: 901px) {
+            .bottom-nav-bar {
+                bottom: auto;
+                left: auto;
+                right: 25px;
+                top: 50%;
+                transform: translateY(-50%) !important;
+                flex-direction: column;
+                gap: 20px;
+                padding: 14px 6px;
+                background: rgba(255, 255, 255, 0.45);
+                backdrop-filter: blur(8px);
+                border-radius: 30px;
+                box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+            }
+        }
+
+        .nav-icon-bubble {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+            background-color: transparent;
+            position: relative;
+        }
+
+        .nav-icon-bubble:hover {
+            transform: scale(1.1);
+        }
+
+        .nav-icon-bubble svg {
+            width: 16px;
+            height: 16px;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            fill: none;
+        }
+
+        /* Indicateur animé global de la page courante */
+        .nav-active-indicator {
+            position: absolute;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            pointer-events: none;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease;
+            z-index: -1;
+        }
+
+        /* Position de l'indicateur selon l'orientation de la barre */
+        @media (max-width: 900px) {
+            .nav-active-indicator {
+                top: 6px;
+                left: 0px;
+            }
+        }
+        @media (min-width: 901px) {
+            .nav-active-indicator {
+                top: 0px;
+                left: 6px;
+            }
+        }
+
+        /* Styles actifs spécifiques par page pour l'icône courante uniquement */
+        #page-intro .nav-active-indicator {
+            background-color: rgba(217, 143, 163, 0.4);
+        }
+        #page-intro .nav-icon-bubble.active-nav svg {
+            stroke: #4A2638;
+        }
+
+        #page-exploits .nav-active-indicator {
+            background-color: rgba(142, 186, 154, 0.4);
+        }
+        #page-exploits .nav-icon-bubble.active-nav svg {
+            stroke: #172922;
+        }
+
+        #page-cloud .nav-active-indicator {
+            background-color: rgba(197, 160, 135, 0.4);
+        }
+        #page-cloud .nav-icon-bubble.active-nav svg {
+            stroke: #4B4038;
+        }
+
+        #page-secret .nav-active-indicator {
+            background-color: rgba(197, 168, 204, 0.4);
+        }
+        #page-secret .nav-icon-bubble.active-nav svg {
+            stroke: #38263F;
+        }
+
         /* --- COMMUN BENTO (PAGES 1, 2 & 4) --- */
         .bento-container {
             display: flex;
@@ -346,10 +462,11 @@
             width: 100%;
             max-width: 950px;
             height: 100%;
-            max-height: 480px;
+            max-height: calc(100vh - 170px);
+            max-height: calc(100dvh - 170px);
             margin: 0 auto;
             z-index: 5;
-            padding: 10px;
+            padding: 10px 10px 60px 10px;
             overflow: visible;
             flex-grow: 1;
         }
@@ -536,6 +653,27 @@
     </style>
 </head>
 <body>
+
+    <!-- Barre de navigation unique globale fixe, positionnée en bas sur mobile et à droite sur ordinateur -->
+    <div class="bottom-nav-bar" id="global-nav-bar">
+        <div class="nav-active-indicator" id="nav-indicator"></div>
+        <!-- 1. Gâteau -->
+        <a href="#page-intro" class="nav-icon-bubble active-nav" aria-label="Gâteau d'anniversaire" data-index="0">
+            <svg viewBox="0 0 24 24"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"/><path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1"/><path d="M2 21h20"/><path d="M7 8v3"/><path d="M12 8v3"/><path d="M17 8v3"/><path d="M12 4v1"/></svg>
+        </a>
+        <!-- 2. Étoile -->
+        <a href="#page-exploits" class="nav-icon-bubble" aria-label="Étoile" data-index="1">
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </a>
+        <!-- 3. Cœur -->
+        <a href="#page-cloud" class="nav-icon-bubble" aria-label="Cœur" data-index="2">
+            <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </a>
+        <!-- 4. Cadeau -->
+        <a href="#page-secret" class="nav-icon-bubble" aria-label="Cadeau" data-index="3">
+            <svg viewBox="0 0 24 24"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+        </a>
+    </div>
 
     <div class="section" id="page-intro">
         <div class="section-title">Page 1</div>
@@ -766,6 +904,42 @@
     </div>
 
     <script>
+        /* --- NAVIGATION ANIMÉE (INDICATEUR COULISSANT UNIQUE) --- */
+        function updateNavIndicators() {
+            const sections = document.querySelectorAll('.section');
+            const globalBar = document.getElementById('global-nav-bar');
+            const indicator = document.getElementById('nav-indicator');
+            if (!globalBar || !indicator) return;
+            
+            sections.forEach((section) => {
+                const rect = section.getBoundingClientRect();
+                if (rect.top <= window.innerHeight / 2 && rect.bottom > window.innerHeight / 2) {
+                    const activeNavs = section.querySelectorAll('.nav-icon-bubble');
+                    let targetIndex = 0;
+                    activeNavs.forEach((nav, i) => {
+                        if (nav.classList.contains('active-nav')) {
+                            targetIndex = i;
+                        }
+                    });
+
+                    const iconSize = 32;
+                    const gap = 20;
+                    const padding = 14;
+                    const targetOffset = padding + targetIndex * (iconSize + gap);
+
+                    if (window.innerWidth <= 900) {
+                        indicator.style.transform = `translateX(${targetOffset}px)`;
+                    } else {
+                        indicator.style.transform = `translateY(${targetOffset}px)`;
+                    }
+                }
+            });
+        }
+
+        document.body.addEventListener('scroll', updateNavIndicators);
+        window.addEventListener('resize', updateNavIndicators);
+        document.addEventListener('DOMContentLoaded', updateNavIndicators);
+
         /* --- PAGE 2 : ODOMÈTRE --- */
         function initOdometers() {
             const odometers = document.querySelectorAll('.odometer');
@@ -967,7 +1141,7 @@
             const minX = radius + 4;
             const maxX = W - radius - 4;
             const minY = radius + 4;
-            const maxY = H - radius - 4;
+            const maxY = H - radius - 60; 
             return {
                 x: Math.max(minX, Math.min(maxX, x)),
                 y: Math.max(minY, Math.min(maxY, y))
@@ -987,7 +1161,7 @@
                 const approximateColumns = Math.max(1, Math.floor(W / (averageDiameter + gap)));
                 const approximateRows = Math.max(1, Math.ceil(visibleDots.length / approximateColumns));
                 const estimatedHeight = approximateRows * (averageDiameter + gap);
-                if (estimatedHeight <= H * 0.85) {
+                if (estimatedHeight <= H * 0.75) {
                     return gap;
                 }
             }
@@ -1000,14 +1174,14 @@
             const W = container.clientWidth;
             const H = container.clientHeight;
             const centerX = W / 2;
-            const centerY = H / 2;
+            const centerY = (H - 50) / 2;
             const gap = calculateGap(visibleDots);
 
             const positions = visibleDots.map((dot, index) => {
                 const radius = getDotRadius(dot);
                 const angle = index * 2.399963;
-                const spread = Math.min(W, H) * 0.2;
-                const randomOffset = (Math.random() - 0.5) * 30;
+                const spread = Math.min(W, H) * 0.18;
+                const randomOffset = (Math.random() - 0.5) * 20;
                 
                 const initialX = centerX + Math.cos(angle) * spread + randomOffset;
                 const initialY = centerY + Math.sin(angle) * spread + randomOffset;
